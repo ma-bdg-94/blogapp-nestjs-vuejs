@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema } from 'mongoose';
 import { Publication } from './interfaces/publication.interface';
 
 export const PublicationSchema = new Schema<Publication>(
