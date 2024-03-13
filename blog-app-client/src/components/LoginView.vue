@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import loginImage from "../resources/login.jpg";
 import { useAuthStore } from "@/stores/auth.store";
+import { useRouter } from "vue-router";
 
 const formData = ref({
   email: "",
@@ -10,14 +11,18 @@ const formData = ref({
 
 const showPassword = ref(false);
 
-const authStore = useAuthStore()
+const authStore = useAuthStore();
+
+const router = useRouter();
 
 const handleSubmit = async (event) => {
   event.preventDefault();
-  // Implement your form submission logic here
-  // (e.g., send data to backend, display success/error message)
-  await authStore.loginUser(formData.value)
+  await authStore.loginUser(formData.value);
   console.log("Form submitted:", formData.value);
+};
+
+const handleRedirect = () => {
+  router.push("/register");
 };
 
 const toggleShowPassword = () => {
@@ -45,19 +50,32 @@ const toggleShowPassword = () => {
         </div>
         <div class="form-group">
           <label for="password">Password:</label>
-          <input
-            :type="showPassword ? 'text' : 'password'"
-            id="password"
-            name="password"
-            v-model="formData.password"
-            required
-          />
-          <button type="button" @click="toggleShowPassword">
-            <span v-if="!showPassword">Show</span>
-            <span v-else>Hide</span>
+          <div class="horizontal-container">
+            <input
+              :type="showPassword ? 'text' : 'password'"
+              id="password"
+              name="password"
+              v-model="formData.password"
+              required
+            />
+            <button type="button" @click="toggleShowPassword">
+              <span v-if="!showPassword">Show</span>
+              <span v-else>Hide</span>
+            </button>
+          </div>
+        </div>
+        <div v-if="authStore.error">
+          <p class="error">{{ authStore.error }}</p>
+        </div>
+        <div class="horizontal-container">
+          <button type="submit" class="submit">Sign In</button>
+          <div class="separator">
+            <p style="font-size: 1rem; margin-block: 50%">or</p>
+          </div>
+          <button type="submit" class="redirect" @click="handleRedirect">
+            Create a new account
           </button>
         </div>
-        <button type="submit">Sign In</button>
       </form>
     </div>
   </div>
@@ -77,7 +95,7 @@ const toggleShowPassword = () => {
 
 .left-column,
 .right-column {
-  flex: 1; /* Both columns take up half the space */
+  flex: 1;
   padding: 1rem;
 }
 
@@ -90,8 +108,8 @@ const toggleShowPassword = () => {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%; /* Image takes full height of left column */
-  object-fit: cover; /* Scales image to fit container */
+  height: 100%;
+  object-fit: cover;
 }
 
 .right-column {
@@ -108,7 +126,7 @@ const toggleShowPassword = () => {
 }
 
 .form-group {
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.125rem;
   width: 500px;
 }
 
@@ -126,16 +144,74 @@ const toggleShowPassword = () => {
   box-sizing: border-box;
 }
 
+.form-group input:hover {
+  padding: 0.5rem;
+  border: 1px solid #002642;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  padding: 0.5rem;
+  outline: 2.5px solid #002642 !important;
+  border: none;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .form-group button {
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 4px;
-  background-color: #ddd;
+  background-color: #e5950055;
   cursor: pointer;
   margin-left: 0.5rem;
 }
 
 .form-group button.show-password {
   background-color: transparent;
+}
+
+.horizontal-container {
+  display: flex;
+  align-items: center;
+}
+
+.submit {
+  width: 50%;
+  margin-block: 2%;
+  height: 40px;
+  border-radius: 15px;
+  font-size: 1rem;
+  color: white;
+  border: none;
+  background-color: #840032;
+  cursor: pointer;
+}
+
+.separator {
+  font-size: 1rem !important;
+  margin-inline: 1rem !important;
+  display: flex;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.redirect {
+  width: 50%;
+  margin-block: 2%;
+  height: 40px;
+  border-radius: 15px;
+  font-size: 1rem;
+  color: #840032;
+  border: none;
+  background-color: #84003200;
+  cursor: pointer;
+}
+.error {
+  color: red;
+  font-size: 1rem !important;
 }
 </style>

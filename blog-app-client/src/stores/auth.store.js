@@ -19,12 +19,12 @@ export const useAuthStore = defineStore('user', {
           }
         })
         this.isAuthenticated = true
-        const tokenValue = await response.json()
+        const tokenValue = response.data.accessToken
         localStorage.setItem('access_token', tokenValue)
         this.token = tokenValue
+        return response.data
       } catch (error) {
-        console.error('Login error:', error);
-        this.error = error.message;
+        this.error = error.response.data.error;
       }
     },
 
@@ -36,12 +36,12 @@ export const useAuthStore = defineStore('user', {
           }
         })
         this.isAuthenticated = true
-        const tokenValue = await response.json()
+        const tokenValue = response.data.accessToken
         localStorage.setItem('access_token', tokenValue)
         this.token = tokenValue
+        return response.data
       } catch (error) {
-        console.error('Login error:', error);
-        this.error = error.message;
+        this.error = error.response.data.error;
       }
     },
 

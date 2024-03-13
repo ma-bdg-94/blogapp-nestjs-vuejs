@@ -38,10 +38,10 @@ export class AuthGuard implements CanActivate {
     } catch (error) {
       throw new HttpException(
         {
-          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-          error: 'Server Eeor!',
+          statusCode: HttpStatus.UNAUTHORIZED,
+          error: 'Access token not found or not valid! Access denied.',
         },
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.UNAUTHORIZED,
       );
     }
     return true;
