@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Logger } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersController } from './users/users.controller';
@@ -13,12 +13,35 @@ import { UsersModule } from './users/users.module';
 import { AuthService } from './auth/auth.service';
 import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 import * as dotenv from 'dotenv';
 dotenv.config();
 
+const mailerLogger = new Logger('MailerService');
+
 @Module({
-  imports: [PublicationsModule, MongooseModule.forRoot(process?.env?.MONGO_URI), UsersModule, AuthModule],
+  imports: [
+    PublicationsModule,
+    MongooseModule.forRoot(process?.env?.MONGO_URI),
+    UsersModule,
+    AuthModule,
+    MailerModule.forRootAsync({
+      useFactory: () => ({
+        transport: {
+          service: 'hotmail',
+          auth: {
+            user: 'boudagga94@hotmail.fr',
+            pass: 'narutouzumaki',
+          },
+        },
+        defaults: {
+          from: 'boudagga94@hotmail.fr',
+        },
+        logger: mailerLogger
+      }),
+    }),
+  ],
   controllers: [
     AppController,
     UsersController,
@@ -26,6 +49,12 @@ dotenv.config();
     ProfileController,
     AuthController,
   ],
-  providers: [AppService, PublicationsService, UsersService, ProfileService, AuthService],
+  providers: [
+    AppService,
+    PublicationsService,
+    UsersService,
+    ProfileService,
+    AuthService,
+  ],
 })
 export class AppModule {}

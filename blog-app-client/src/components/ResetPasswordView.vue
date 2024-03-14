@@ -1,12 +1,12 @@
 <script setup>
 import { ref } from "vue";
-import loginImage from "../resources/login.jpg";
+import resetPasswordImage from "../resources/reset_password.jpg";
 import { useAuthStore } from "@/stores/auth.store";
 import { useRouter } from "vue-router";
 
 const formData = ref({
-  email: "",
   password: "",
+  passwordRe: "",
 });
 
 const showPassword = ref(false);
@@ -17,12 +17,12 @@ const router = useRouter();
 
 const handleSubmit = async (event) => {
   event.preventDefault();
-  await authStore.loginUser(formData.value);
-  console.log("Form submitted:", formData.value);
-};
-
-const handleRedirect = (path) => {
-  router.push(path);
+  await authStore.updatePassword(
+    localStorage.getItem("password_token"),
+    formData.value
+  );
+  localStorage.removeItem("password_token");
+  router.push("/login");
 };
 
 const toggleShowPassword = () => {
@@ -33,28 +33,38 @@ const toggleShowPassword = () => {
 <template lang="">
   <div class="login-container">
     <div class="left-column">
-      <img :src="loginImage" alt="Login Image" />
+      <img :src="resetPasswordImage" alt="Login Image" />
     </div>
     <div class="right-column">
-      <p>Sign into your account</p>
+      <p>Submit new password</p>
       <form @submit.prevent="handleSubmit">
         <div class="form-group">
-          <label for="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            v-model="formData.email"
-          />
-        </div>
-        <div class="form-group">
-          <label for="password">Password:</label>
+          <label for="password">New Password:</label>
           <div class="horizontal-container">
             <input
               :type="showPassword ? 'text' : 'password'"
               id="password"
               name="password"
               v-model="formData.password"
+            />
+            <button
+              type="button"
+              @click="toggleShowPassword"
+              style="visibility: hidden"
+            >
+              <span v-if="!showPassword">Show</span>
+              <span v-else>Hide</span>
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="passwordRe">Retype New Password:</label>
+          <div class="horizontal-container">
+            <input
+              :type="showPassword ? 'text' : 'password'"
+              id="passwordRe"
+              name="passwordRe"
+              v-model="formData.passwordRe"
             />
             <button type="button" @click="toggleShowPassword">
               <span v-if="!showPassword">Show</span>
@@ -66,18 +76,7 @@ const toggleShowPassword = () => {
           <p class="error">{{ authStore.error }}</p>
         </div>
         <div class="horizontal-container">
-          <button type="submit" class="submit">Sign In</button>
-          <div class="separator">
-            <p style="font-size: 1rem; margin-block: 50%">or</p>
-          </div>
-          <button type="submit" class="redirect" @click="handleRedirect('/register')">
-            Create a new account
-          </button>
-        </div>
-        <div class="horizontal-container">
-          <button type="submit" class="redirect" style="width: 100%;" @click="handleRedirect('/password')">
-            I forgot my password
-          </button>
+          <button type="submit" class="submit" style="width: 100%;">Update Password</button>
         </div>
       </form>
     </div>

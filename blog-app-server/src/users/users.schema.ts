@@ -18,6 +18,14 @@ export const UserSchema = new Schema<User>(
     birthdate: {
       type: Date,
       default: new Date(),
+    },
+    resetToken: {
+      type: String,
+      default: ''
+    },
+    resetTokenExpiration: {
+      type: Date,
+      default: new Date(),
     }
   }, {
     timestamps: true

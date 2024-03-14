@@ -46,7 +46,6 @@ const navigate = link => {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  /* Container spans the full width */
 }
 
 .navbar-brand {

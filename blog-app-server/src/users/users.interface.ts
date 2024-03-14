@@ -4,6 +4,8 @@ export interface User {
   birthdate?: Date;
   email: string;
   password: string;
+  resetToken?: string;
+  resetTokenExpiration?: Date
 }
 
 export interface UserLogin {

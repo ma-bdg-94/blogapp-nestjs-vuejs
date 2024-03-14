@@ -16,4 +16,7 @@ export class ForgotPasswordDTO {
 
 export class UpdatePasswordDTO {
   readonly password: number;
+  readonly passwordRe: number;
 }
+
+

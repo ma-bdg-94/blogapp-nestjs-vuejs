@@ -1,12 +1,31 @@
 <script setup>
-import NavBar from './components/NavBar.vue';
-import HomeView from './components/HomeView.vue'
-import router from './router';
+import { onMounted, ref } from 'vue';
+import NavBar from "./components/NavBar.vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const isRouteReady = ref(false);
+
+onMounted(() => {
+  router.isReady().then(() => {
+    isRouteReady.value = true;
+  });
+});
+
 </script>
 
 <template>
-  <NavBar app-name="Blog App" v-if="$route.name !== 'login' && $route.name !== 'register'" />
-  <router-view />
+  <NavBar
+    app-name="Blog App"
+    v-if="
+      isRouteReady &&
+      $route.name !== 'login' &&
+      $route.name !== 'register' &&
+      $route.name !== 'forgot_password' &&
+      $route.name !== 'reset_password'
+    "
+  />
+  <router-view v-if="isRouteReady" />
 </template>
 
 <style scoped>
